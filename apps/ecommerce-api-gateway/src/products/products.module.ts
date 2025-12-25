@@ -9,7 +9,10 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       {
         name: 'PRODUCTS_CLIENT',
         transport: Transport.TCP,
-        options: { port: 3002 },
+        options: {
+          host: process.env.PRODUCTS_SERVICE_HOST,
+          port: Number(process.env.PRODUCTS_SERVICE_PORT),
+        },
       },
     ]),
   ],
