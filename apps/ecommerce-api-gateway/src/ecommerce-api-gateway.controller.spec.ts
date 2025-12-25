@@ -11,7 +11,9 @@ describe('EcommerceApiGatewayController', () => {
       providers: [EcommerceApiGatewayService],
     }).compile();
 
-    ecommerceApiGatewayController = app.get<EcommerceApiGatewayController>(EcommerceApiGatewayController);
+    ecommerceApiGatewayController = app.get<EcommerceApiGatewayController>(
+      EcommerceApiGatewayController,
+    );
   });
 
   describe('root', () => {

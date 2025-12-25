@@ -3,7 +3,9 @@ import { EcommerceApiGatewayService } from './ecommerce-api-gateway.service';
 
 @Controller()
 export class EcommerceApiGatewayController {
-  constructor(private readonly ecommerceApiGatewayService: EcommerceApiGatewayService) {}
+  constructor(
+    private readonly ecommerceApiGatewayService: EcommerceApiGatewayService,
+  ) {}
 
   @Get()
   getHello(): string {
