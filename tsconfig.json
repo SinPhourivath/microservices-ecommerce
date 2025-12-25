@@ -23,10 +23,10 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@app/contracts": [
-        "libs/contracts/src"
+        "libs/contracts"
       ],
       "@app/contracts/*": [
-        "libs/contracts/src/*"
+        "libs/contracts/*"
       ]
     }
   }
