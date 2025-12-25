@@ -10,6 +10,15 @@
   "monorepo": true,
   "root": "apps/ecommerce-api-gateway",
   "projects": {
+    "contracts": {
+      "type": "library",
+      "root": "libs/contracts",
+      "entryFile": "index",
+      "sourceRoot": "libs/contracts/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/contracts/tsconfig.lib.json"
+      }
+    },
     "ecommerce-api-gateway": {
       "type": "application",
       "root": "apps/ecommerce-api-gateway",
