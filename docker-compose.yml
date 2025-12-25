@@ -21,9 +21,9 @@ services:
       dockerfile: apps/users/Dockerfile
     container_name: users-service
     environment:
-      - NODE_ENV=development
-      - PORT=3001
-      - MONGODB_URI=mongodb://mongo:27017/users-db
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${USERS_PORT}
+      - MONGODB_URI=${USERS_MONGO_URI}
     ports:
       - "3001:3001"
     depends_on:
@@ -38,9 +38,9 @@ services:
       dockerfile: apps/products/Dockerfile
     container_name: products-service
     environment:
-      - NODE_ENV=development
-      - PORT=3002
-      - MONGODB_URI=mongodb://mongo:27017/products-db
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PRODUCTS_PORT}
+      - MONGODB_URI=${PRODUCTS_MONGO_URI}
     ports:
       - "3002:3002"
     depends_on:
@@ -55,9 +55,9 @@ services:
       dockerfile: apps/orders/Dockerfile
     container_name: orders-service
     environment:
-      - NODE_ENV=development
-      - PORT=3003
-      - MONGODB_URI=mongodb://mongo:27017/orders-db
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${ORDERS_PORT}
+      - MONGODB_URI=${ORDERS_MONGO_URI}
     ports:
       - "3003:3003"
     depends_on:
@@ -72,16 +72,16 @@ services:
       dockerfile: apps/ecommerce-api-gateway/Dockerfile
     container_name: api-gateway
     environment:
-      - NODE_ENV=development
-      - PORT=3000
-      - USERS_SERVICE_HOST=users
-      - USERS_SERVICE_PORT=3001
-      - PRODUCTS_SERVICE_HOST=products
-      - PRODUCTS_SERVICE_PORT=3002
-      - ORDERS_SERVICE_HOST=orders
-      - ORDERS_SERVICE_PORT=3003
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
+      - USERS_SERVICE_HOST=${USERS_SERVICE_HOST}
+      - USERS_SERVICE_PORT=${USERS_SERVICE_PORT}
+      - PRODUCTS_SERVICE_HOST=${PRODUCTS_SERVICE_HOST}
+      - PRODUCTS_SERVICE_PORT=${PRODUCTS_SERVICE_PORT}
+      - ORDERS_SERVICE_HOST=${ORDERS_SERVICE_HOST}
+      - ORDERS_SERVICE_PORT=${ORDERS_SERVICE_PORT}
     ports:
-      - "3000:3000"
+      - "${PORT}:${PORT}"
     depends_on:
       - users
       - products
