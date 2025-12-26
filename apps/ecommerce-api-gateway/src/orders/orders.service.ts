@@ -1,13 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateOrderDto } from '@app/contracts/orders';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class OrdersService {
   constructor(@Inject('ORDERS_CLIENT') private ordersClient: ClientProxy) {}
 
-  create(createOrderDto: CreateOrderDto) {
-    return this.ordersClient.send('orders.create', createOrderDto);
+  create(createOrderDto: CreateOrderDto, userId: string) {
+    return firstValueFrom(
+      this.ordersClient.send('orders.create', { ...createOrderDto, userId }),
+    );
   }
 
   findAll() {

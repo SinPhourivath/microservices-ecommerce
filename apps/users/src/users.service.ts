@@ -187,6 +187,8 @@ export class UsersService {
       firstName: user.firstName,
       lastName: user.lastName,
       phone: user.phone,
+      age: user.age,
+      address: user.address,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       token,

@@ -10,7 +10,7 @@ import {
 
 @Injectable()
 export class UsersService {
-  constructor(@Inject('USERS_CLIENT') private usersClient: ClientProxy) { }
+  constructor(@Inject('USERS_CLIENT') private usersClient: ClientProxy) {}
 
   /**
    * Register a new user via Users microservice
@@ -47,13 +47,6 @@ export class UsersService {
    */
   async getUserById(userId: string): Promise<UserResponseDto> {
     return firstValueFrom(this.usersClient.send('users.getById', { userId }));
-  }
-
-  /**
-   * Get user by email via Users microservice
-   */
-  async getUserByEmail(email: string): Promise<UserResponseDto> {
-    return firstValueFrom(this.usersClient.send('users.getByEmail', { email }));
   }
 
   /**

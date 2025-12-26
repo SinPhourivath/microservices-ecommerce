@@ -6,7 +6,6 @@ import {
   Delete,
   Body,
   Param,
-  Query,
   UseGuards,
   Request,
   HttpCode,
@@ -27,10 +26,6 @@ import {
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  // ============================================
-  // PUBLIC ROUTES (No JWT required)
-  // ============================================
-
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   async register(
@@ -45,34 +40,14 @@ export class UsersController {
     return this.usersService.login(loginUserDto);
   }
 
-  // ============================================
-  // PROTECTED ROUTES (JWT required)
-  // ============================================
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  async getProfile(@Request() req): Promise<UserResponseDto> {
-    return this.usersService.getUserById(req.user.userId);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('search/email')
-  async getUserByEmail(
-    @Query('email') email: string,
-  ): Promise<UserResponseDto> {
-    if (!email) {
-      throw new BadRequestException('Email query parameter is required');
-    }
-    return this.usersService.getUserByEmail(email);
-  }
-
-  @UseGuards(JwtAuthGuard)
+  // 
+  // No admin for now, just for testing, all request can access
+  // 
   @Get()
   async getAllUsers(): Promise<UserResponseDto[]> {
     return this.usersService.getAllUsers();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getUserById(@Param('id') userId: string): Promise<UserResponseDto> {
     if (!userId) {
@@ -92,9 +67,11 @@ export class UsersController {
       throw new BadRequestException('User ID is required');
     }
 
+    // Check if user is updating their own profile
     if (userId !== req.user.userId) {
       throw new ForbiddenException('You can only update your own profile');
     }
+
     return this.usersService.updateUser(userId, updateUserDto);
   }
 
@@ -109,9 +86,11 @@ export class UsersController {
       throw new BadRequestException('User ID is required');
     }
 
+    // Check if user is deleting their own account
     if (userId !== req.user.userId) {
-      throw new ForbiddenException('You can only delete your own profile');
+      throw new ForbiddenException('You can only delete your own account');
     }
+
     return this.usersService.deleteUser(userId);
   }
 }

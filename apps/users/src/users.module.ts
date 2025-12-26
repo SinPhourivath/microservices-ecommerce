@@ -33,4 +33,4 @@ import { User, UserSchema } from '@app/contracts/users';
   providers: [UsersService],
   exports: [UsersService],
 })
-export class UsersModule { }
+export class UsersModule {}
