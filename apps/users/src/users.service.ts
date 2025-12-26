@@ -6,12 +6,13 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { User, UserDocument } from './schemas/user.schema';
 import {
   CreateUserDto,
   LoginUserDto,
   UserResponseDto,
   UpdateUserDto,
+  User,
+  UserDocument,
 } from '@app/contracts/users';
 
 @Injectable()
@@ -104,7 +105,7 @@ export class UsersService {
     userId: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UserResponseDto> {
-    const updateData: any = {};
+    const updateData: Partial<User> = {};
 
     if (updateUserDto.firstName) updateData.firstName = updateUserDto.firstName;
     if (updateUserDto.lastName) updateData.lastName = updateUserDto.lastName;

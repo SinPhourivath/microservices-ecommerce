@@ -1,24 +1,12 @@
 import {
-  IsString,
-  IsNumber,
   IsArray,
-  ValidateNested,
+  IsNumber,
+  IsString,
   Min,
+  ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-
-export class OrderDto {
-  @IsString()
-  productId: string;
-
-  @IsNumber()
-  @Min(1)
-  quantity: number;
-
-  @IsNumber()
-  @Min(0)
-  price: number;
-}
+import { OrderDto } from './order.dto';
 
 export class CreateOrderDto {
   @IsString()

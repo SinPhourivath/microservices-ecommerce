@@ -1,9 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import {
-  CreateProductDto,
-  UpdateProductDto,
-} from '@app/contracts/src/products/product.dto';
+import { CreateProductDto, UpdateProductDto } from '@app/contracts/products';
 
 @Injectable()
 export class ProductsService {

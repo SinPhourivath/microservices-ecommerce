@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { CreateOrderDto } from '@app/contracts/src/orders/order.dto';
+import { CreateOrderDto } from '@app/contracts/orders';
 
 @Controller()
 export class OrdersController {

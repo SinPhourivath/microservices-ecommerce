@@ -3,10 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
-import {
-  Product,
-  ProductSchema,
-} from '@app/contracts/src/products/product.entity';
+import { Product, ProductSchema } from '@app/contracts/products';
 
 @Module({
   imports: [

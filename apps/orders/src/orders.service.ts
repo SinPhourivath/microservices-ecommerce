@@ -1,5 +1,4 @@
-import { CreateOrderDto } from '@app/contracts/src/orders/order.dto';
-import { Order, OrderDocument } from '@app/contracts/src/orders/order.entity';
+import { CreateOrderDto, Order, OrderDocument } from '@app/contracts/orders';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
