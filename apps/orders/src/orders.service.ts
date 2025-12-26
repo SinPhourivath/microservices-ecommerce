@@ -22,7 +22,7 @@ export class OrdersService {
   async findOne(id: string) {
     const order = await this.orderModel.findById(id).exec();
     if (!order) {
-      throw new NotFoundException(`Order #${id} not found`);
+      throw new NotFoundException(`Order with ID ${id} not found`);
     }
 
     return order;

@@ -4,7 +4,7 @@ import { CreateOrderDto } from '@app/contracts/src/orders/order.dto';
 
 @Injectable()
 export class OrdersService {
-  constructor(@Inject('ORDERS_CLIENT') private ordersClient: ClientProxy) { }
+  constructor(@Inject('ORDERS_CLIENT') private ordersClient: ClientProxy) {}
 
   create(createOrderDto: CreateOrderDto) {
     return this.ordersClient.send('orders.create', createOrderDto);

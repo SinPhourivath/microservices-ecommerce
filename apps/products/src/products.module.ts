@@ -3,6 +3,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
+import {
+  Product,
+  ProductSchema,
+} from '@app/contracts/src/products/product.entity';
 
 @Module({
   imports: [
@@ -17,6 +21,7 @@ import { ProductsService } from './products.service';
       }),
       inject: [ConfigService],
     }),
+    MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
   ],
   controllers: [ProductsController],
   providers: [ProductsService],

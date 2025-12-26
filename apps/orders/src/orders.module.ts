@@ -23,4 +23,4 @@ import { Order, OrderSchema } from '@app/contracts/src/orders/order.entity';
   controllers: [OrdersController],
   providers: [OrdersService],
 })
-export class OrdersModule { }
+export class OrdersModule {}
