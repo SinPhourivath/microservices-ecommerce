@@ -39,7 +39,7 @@ export class ProductsService {
       .findByIdAndUpdate(id, updateProductDto, { new: true })
       .exec();
     if (!updatedProduct) {
-      throw new NotFoundException(`Product with ID ${id} not found`);
+      throw new NotFoundException(`Product with ID ${id} not found hehe`);
     }
     return updatedProduct;
   }
