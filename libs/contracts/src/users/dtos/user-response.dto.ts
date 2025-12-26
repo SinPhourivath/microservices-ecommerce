@@ -4,6 +4,7 @@ export class UserResponseDto {
   firstName: string;
   lastName: string;
   phone?: string;
+  token?: string;
   createdAt: Date;
   updatedAt: Date;
 }

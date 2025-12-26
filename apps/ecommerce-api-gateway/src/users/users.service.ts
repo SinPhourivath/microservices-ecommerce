@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, BadRequestException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import {
@@ -10,15 +10,22 @@ import {
 
 @Injectable()
 export class UsersService {
-  constructor(@Inject('USERS_CLIENT') private usersClient: ClientProxy) {}
+  constructor(@Inject('USERS_CLIENT') private usersClient: ClientProxy) { }
 
   /**
    * Register a new user via Users microservice
    */
   async register(createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    return firstValueFrom(
-      this.usersClient.send('users.register', createUserDto),
-    );
+    try {
+      return await firstValueFrom(
+        this.usersClient.send('users.register', createUserDto),
+      );
+    } catch (error) {
+      if (error?.message) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
+    }
   }
 
   /**

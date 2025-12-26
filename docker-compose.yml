@@ -24,6 +24,7 @@ services:
       - NODE_ENV=${NODE_ENV}
       - PORT=${USERS_PORT}
       - MONGODB_URI=${USERS_MONGO_URI}
+      - JWT_SECRET=${JWT_SECRET}
     ports:
       - "3001:3001"
     depends_on:
@@ -74,6 +75,7 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV}
       - PORT=${PORT}
+      - JWT_SECRET=${JWT_SECRET}
       - USERS_SERVICE_HOST=${USERS_SERVICE_HOST}
       - USERS_SERVICE_PORT=${USERS_SERVICE_PORT}
       - PRODUCTS_SERVICE_HOST=${PRODUCTS_SERVICE_HOST}

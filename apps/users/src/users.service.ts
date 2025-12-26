@@ -5,7 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 import {
   CreateUserDto,
   LoginUserDto,
@@ -17,7 +18,10 @@ import {
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private jwtService: JwtService,
+  ) {}
 
   /**
    * Register a new user
@@ -48,7 +52,10 @@ export class UsersService {
       address,
     });
 
-    return this.mapUserToResponse(newUser);
+    // Generate JWT token
+    const token = this.generateToken(newUser);
+
+    return this.mapUserToResponse(newUser, token);
   }
 
   /**
@@ -73,7 +80,10 @@ export class UsersService {
       throw new UnauthorizedException('User account is inactive');
     }
 
-    return this.mapUserToResponse(user);
+    // Generate JWT token
+    const token = this.generateToken(user);
+
+    return this.mapUserToResponse(user, token);
   }
 
   /**
@@ -157,9 +167,20 @@ export class UsersService {
   }
 
   /**
+   * Generate JWT token for user
+   */
+  private generateToken(user: UserDocument): string {
+    const payload = { email: user.email, sub: user._id.toString() };
+    return this.jwtService.sign(payload);
+  }
+
+  /**
    * Map user document to response DTO
    */
-  private mapUserToResponse(user: UserDocument): UserResponseDto {
+  private mapUserToResponse(
+    user: UserDocument,
+    token?: string,
+  ): UserResponseDto {
     return {
       id: user._id.toString(),
       email: user.email,
@@ -168,6 +189,7 @@ export class UsersService {
       phone: user.phone,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      token,
     };
   }
 }

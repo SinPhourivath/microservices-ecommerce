@@ -1,71 +1,61 @@
 import {
   Controller,
-  Get,
   Post,
+  Get,
   Put,
   Delete,
   Body,
   Param,
   Query,
+  UseGuards,
+  Request,
+  HttpCode,
+  HttpStatus,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UsersService } from './users.service';
 import {
   CreateUserDto,
   LoginUserDto,
-  UserResponseDto,
   UpdateUserDto,
+  UserResponseDto,
 } from '@app/contracts/users';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  /**
-   * POST /users/register
-   * Register a new user
-   */
+  // ============================================
+  // PUBLIC ROUTES (No JWT required)
+  // ============================================
+
   @Post('register')
+  @HttpCode(HttpStatus.CREATED)
   async register(
     @Body() createUserDto: CreateUserDto,
   ): Promise<UserResponseDto> {
     return this.usersService.register(createUserDto);
   }
 
-  /**
-   * POST /users/login
-   * Login user with email and password
-   */
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   async login(@Body() loginUserDto: LoginUserDto): Promise<UserResponseDto> {
     return this.usersService.login(loginUserDto);
   }
 
-  /**
-   * GET /users
-   * Get all users
-   */
-  @Get()
-  async getAllUsers(): Promise<UserResponseDto[]> {
-    return this.usersService.getAllUsers();
+  // ============================================
+  // PROTECTED ROUTES (JWT required)
+  // ============================================
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  async getProfile(@Request() req): Promise<UserResponseDto> {
+    return this.usersService.getUserById(req.user.userId);
   }
 
-  /**
-   * GET /users/:id
-   * Get user by ID
-   */
-  @Get(':id')
-  async getUserById(@Param('id') userId: string): Promise<UserResponseDto> {
-    if (!userId) {
-      throw new BadRequestException('User ID is required');
-    }
-    return this.usersService.getUserById(userId);
-  }
-
-  /**
-   * GET /users/search/email
-   * Get user by email query parameter
-   */
+  @UseGuards(JwtAuthGuard)
   @Get('search/email')
   async getUserByEmail(
     @Query('email') email: string,
@@ -76,29 +66,51 @@ export class UsersController {
     return this.usersService.getUserByEmail(email);
   }
 
-  /**
-   * PUT /users/:id
-   * Update user information
-   */
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async getAllUsers(): Promise<UserResponseDto[]> {
+    return this.usersService.getAllUsers();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  async getUserById(@Param('id') userId: string): Promise<UserResponseDto> {
+    if (!userId) {
+      throw new BadRequestException('User ID is required');
+    }
+    return this.usersService.getUserById(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async updateUser(
     @Param('id') userId: string,
     @Body() updateUserDto: UpdateUserDto,
+    @Request() req,
   ): Promise<UserResponseDto> {
     if (!userId) {
       throw new BadRequestException('User ID is required');
     }
+
+    if (userId !== req.user.userId) {
+      throw new ForbiddenException('You can only update your own profile');
+    }
     return this.usersService.updateUser(userId, updateUserDto);
   }
 
-  /**
-   * DELETE /users/:id
-   * Delete user
-   */
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async deleteUser(@Param('id') userId: string): Promise<{ message: string }> {
+  @HttpCode(HttpStatus.OK)
+  async deleteUser(
+    @Param('id') userId: string,
+    @Request() req,
+  ): Promise<{ message: string }> {
     if (!userId) {
       throw new BadRequestException('User ID is required');
+    }
+
+    if (userId !== req.user.userId) {
+      throw new ForbiddenException('You can only delete your own profile');
     }
     return this.usersService.deleteUser(userId);
   }

@@ -4,7 +4,6 @@ import { UsersService } from './users.service';
 import {
   CreateUserDto,
   LoginUserDto,
-  UserResponseDto,
   UpdateUserDto,
 } from '@app/contracts/users';
 
@@ -12,92 +11,44 @@ import {
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  /**
-   * Message Pattern: users.register
-   * Register a new user
-   */
   @MessagePattern('users.register')
-  async register(
-    @Payload() createUserDto: CreateUserDto,
-  ): Promise<UserResponseDto> {
+  async register(@Payload() createUserDto: CreateUserDto) {
     return this.usersService.register(createUserDto);
   }
 
-  /**
-   * Message Pattern: users.login
-   * Login user with email and password
-   */
   @MessagePattern('users.login')
-  async login(@Payload() loginUserDto: LoginUserDto): Promise<UserResponseDto> {
+  async login(@Payload() loginUserDto: LoginUserDto) {
     return this.usersService.login(loginUserDto);
   }
 
-  /**
-   * Message Pattern: users.getAll
-   * Get all users
-   */
+  @MessagePattern('users.getById')
+  async getUserById(@Payload() data: { userId: string }) {
+    return this.usersService.getUserById(data.userId);
+  }
+
+  @MessagePattern('users.getByEmail')
+  async getUserByEmail(@Payload() data: { email: string }) {
+    return this.usersService.getUserByEmail(data.email);
+  }
+
   @MessagePattern('users.getAll')
-  async getAllUsers(): Promise<UserResponseDto[]> {
+  async getAllUsers() {
     return this.usersService.getAllUsers();
   }
 
-  /**
-   * Message Pattern: users.getById
-   * Get user by ID
-   */
-  @MessagePattern('users.getById')
-  async getUserById(
-    @Payload() payload: { userId: string },
-  ): Promise<UserResponseDto> {
-    return this.usersService.getUserById(payload.userId);
-  }
-
-  /**
-   * Message Pattern: users.getByEmail
-   * Get user by email
-   */
-  @MessagePattern('users.getByEmail')
-  async getUserByEmail(
-    @Payload() payload: { email: string },
-  ): Promise<UserResponseDto> {
-    return this.usersService.getUserByEmail(payload.email);
-  }
-
-  /**
-   * Message Pattern: users.update
-   * Update user information
-   */
   @MessagePattern('users.update')
-  async updateUser(
-    @Payload() payload: { userId: string; data: UpdateUserDto },
-  ): Promise<UserResponseDto> {
-    return this.usersService.updateUser(payload.userId, payload.data);
+  async updateUser(@Payload() data: { userId: string; data: UpdateUserDto }) {
+    return this.usersService.updateUser(data.userId, data.data);
   }
 
-  /**
-   * Message Pattern: users.delete
-   * Delete user
-   */
   @MessagePattern('users.delete')
-  async deleteUser(
-    @Payload() payload: { userId: string },
-  ): Promise<{ message: string }> {
-    await this.usersService.deleteUser(payload.userId);
+  async deleteUser(@Payload() data: { userId: string }) {
+    await this.usersService.deleteUser(data.userId);
     return { message: 'User deleted successfully' };
   }
 
-  /**
-   * Message Pattern: users.verifyPassword
-   * Verify user password
-   */
   @MessagePattern('users.verifyPassword')
-  async verifyPassword(
-    @Payload() payload: { userId: string; password: string },
-  ): Promise<{ isValid: boolean }> {
-    const isValid = await this.usersService.verifyPassword(
-      payload.userId,
-      payload.password,
-    );
-    return { isValid };
+  async verifyPassword(@Payload() data: { userId: string; password: string }) {
+    return this.usersService.verifyPassword(data.userId, data.password);
   }
 }
