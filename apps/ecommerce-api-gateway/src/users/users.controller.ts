@@ -13,6 +13,7 @@ import {
   BadRequestException,
   ForbiddenException,
 } from '@nestjs/common';
+import { Request as ExpressRequest } from 'express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UsersService } from './users.service';
 import {
@@ -21,6 +22,13 @@ import {
   UpdateUserDto,
   UserResponseDto,
 } from '@app/contracts/users';
+
+interface AuthenticatedRequest extends ExpressRequest {
+  user: {
+    userId: string;
+    email: string;
+  };
+}
 
 @Controller('users')
 export class UsersController {
@@ -40,9 +48,9 @@ export class UsersController {
     return this.usersService.login(loginUserDto);
   }
 
-  // 
+  //
   // No admin for now, just for testing, all request can access
-  // 
+  //
   @Get()
   async getAllUsers(): Promise<UserResponseDto[]> {
     return this.usersService.getAllUsers();
@@ -61,7 +69,7 @@ export class UsersController {
   async updateUser(
     @Param('id') userId: string,
     @Body() updateUserDto: UpdateUserDto,
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
   ): Promise<UserResponseDto> {
     if (!userId) {
       throw new BadRequestException('User ID is required');
@@ -80,7 +88,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async deleteUser(
     @Param('id') userId: string,
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
   ): Promise<{ message: string }> {
     if (!userId) {
       throw new BadRequestException('User ID is required');

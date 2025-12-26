@@ -141,7 +141,7 @@ export class UsersService {
    * Delete user
    */
   async deleteUser(userId: string): Promise<void> {
-    const result = await this.userModel.findByIdAndDelete(userId);
+    const result = await this.userModel.findOneAndDelete({ _id: userId });
     if (!result) {
       throw new BadRequestException('User not found');
     }

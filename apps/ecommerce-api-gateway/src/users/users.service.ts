@@ -20,8 +20,8 @@ export class UsersService {
       return await firstValueFrom(
         this.usersClient.send('users.register', createUserDto),
       );
-    } catch (error) {
-      if (error?.message) {
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message) {
         throw new BadRequestException(error.message);
       }
       throw error;
